@@ -18,50 +18,74 @@ inline void prepare(){
 template <int N>
 class GAME{
     private:
+        class check{
+            public:
+                bool color;
+                int x, y;
+                vector <pair <int, int>> moves = {{-1,-1},{-1,1},{1,1},{1,-1}};
+        };
+        class kinger : public check{
+            public:
+                int modificate_moves = N;
+        };
         int board[N][N];
-        check b1[N][N];
-        kinger b2[N][N];
+        check* b1[N][N];
+        kinger* b2[N][N];
         bool this_move = 0;
         class rules{
             // __NOT_DEFINED__ //
         };
+        check * getC(int x, int y){return check[x][y];}
+        kinger * getK(int x, int y) {return kinger[x][y];}
         inline void render(){
             for(int i = 0; i < N; i++){
                 for(int j = 0; j < N; j++){
+                    //TODO: Дизайнер рисуй
                     if((i+j)&1){
                         txSetFillColor(TX_BLACK);
                     } else {
                         txSetFillColor(TX_WHITE);
                     }
                     txRectangle(100*j,100*i,100*(j+1),100*(i+1));
-                    if (board[i][j]==1) {
-                        txSetFillColor(TX_GREEN);
-                        // txRectangle(90*j,90*i,90*(j+1),90*(i+1));
-                        txRectangle(100*j+20,100*i+20,100*(j+1)-20,100*(i+1)-20);
+                    if (board[i][j]==1) {// шашка
+                        check* now = getC(i,j);
+                        // txSetFillColor(TX_GREEN);
+                        // txRectangle(100*j+20,100*i+20,100*(j+1)-20,100*(i+1)-20);
                     }
-                    else  if(board[i][j]==2){
-                        txSetFillColor(TX_RED);
-                        // txRectangle(90*j,90*i,90*(j+1),90*(i+1));
-                        txRectangle(100*j+20,100*i+20,100*(j+1)-20,100*(i+1)-20);
+                    else  if(board[i][j]==2){ // дамка
+                        kinger* now = getK(i,j);
+                        // txSetFillColor(TX_RED);
+                        // txRectangle(100*j+20,100*i+20,100*(j+1)-20,100*(i+1)-20);
                     }
                     
                 }
             }
         }
-        class check{
-            bool color;
-            int x, y;
-            vector <pair <int, int>> moves = {{-1,-1},{-1,1},{1,1},{1,-1}};
-        };
-        class kinger : public check{
-            int modificate_moves = N;
-        };
-        check * getC(int x, int y);
-        kinger * getK(int x, int y);
+        void motion(int player){
+            // тут мы получаем координаты мышки 
+            // если цвет мышки совпадает с 
+            int i = 0 , j = 0; // запиши сюда координаты клтеки
+            if (board[i][j]==1) {// шашка
+                check* now = getC(i,j);
+                cout << now->color;
+            }
+            else  if(board[i][j]==2){ // дамка
+                kinger* now = getK(i,j);
+            }
+        }
+        
+        void move(int x, int y, int tox, int toy, bool ch_flag = 1);
         inline void starter(){
             txCreateWindow(100*N,100*N);
             prepare();
-            render();
+            int p = 0;
+            while (true){
+                render();
+                motion(p&1);
+                render();
+                // спим
+                p++;
+            }
             txSleep(10000000);
         }
         void prepare(){
