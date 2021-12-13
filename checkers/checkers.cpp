@@ -31,12 +31,16 @@ class GAME{
         int board[N][N];
         check* b1[N][N];
         kinger* b2[N][N];
-        bool this_move = 0;
+        int this_move = 0;
         class rules{
             // __NOT_DEFINED__ //
         };
-        check * getC(int x, int y){return check[x][y];}
-        kinger * getK(int x, int y) {return kinger[x][y];}
+        bool is_valid(int x, int y){
+            if(x<0 || x >=N || y<0 || y>=N) return false;
+            return true;
+        }
+        check * getC(int x, int y){return b1[x][y];}
+        kinger * getK(int x, int y) {return b2[x][y];}
         inline void render(){
             for(int i = 0; i < N; i++){
                 for(int j = 0; j < N; j++){
@@ -61,20 +65,20 @@ class GAME{
                 }
             }
         }
+        void move(int x, int y, int tox, int toy, bool ch_flag = 1);
         void motion(int player){
             // тут мы получаем координаты мышки 
             // если цвет мышки совпадает с 
             int i = 0 , j = 0; // запиши сюда координаты клтеки
             if (board[i][j]==1) {// шашка
                 check* now = getC(i,j);
-                cout << now->color;
             }
             else  if(board[i][j]==2){ // дамка
                 kinger* now = getK(i,j);
             }
         }
         
-        void move(int x, int y, int tox, int toy, bool ch_flag = 1);
+        
         inline void starter(){
             txCreateWindow(100*N,100*N);
             prepare();
@@ -93,6 +97,17 @@ class GAME{
                 for(int j = 0; j < N; j++){
                     if(i<3 || i>=N-3) {
                         board[i][j] = (((i+j)&1));
+                        if(i<3){
+                            check * tmp = new check;
+                            tmp->color = 0;
+                            tmp->x = i, tmp->y = j;
+                            b1[i][j] = tmp;
+                        } else {
+                            check * tmp = new check;
+                            tmp->color = 1;
+                            tmp->x = i, tmp->y = j;
+                            b1[i][j] = tmp;
+                        }
                     } else board[i][j] = 0;
                 }
             }
