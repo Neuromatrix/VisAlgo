@@ -35,12 +35,12 @@ class GAME{
         class rules{
             // __NOT_DEFINED__ //
         };
-        bool is_valid(int x, int y){
+        inline bool is_valid(int x, int y){
             if(x<0 || x >=N || y<0 || y>=N) return false;
             return true;
         }
-        check * getC(int x, int y){return b1[x][y];}
-        kinger * getK(int x, int y) {return b2[x][y];}
+        inline check * getC(int x, int y){return b1[x][y];}
+        inline kinger * getK(int x, int y) {return b2[x][y];}
         inline void render(){
             for(int i = 0; i < N; i++){
                 for(int j = 0; j < N; j++){
@@ -67,14 +67,14 @@ class GAME{
                 }
             }
         }
-        void move(int x, int y, int tox, int toy, bool ch_flag = 1){
+        inline void move(int x, int y, int tox, int toy, bool ch_flag = 1){
             if(ch_flag){
                 swap(b1[x][y],b1[tox][toy]);
             } else {
                 swap(b2[x][y],b2[tox][toy]);
             }
         }
-        void to_kingers(){
+        inline void to_kingers(){
             int whiteSide = 0, blackSide = N-1;
             for(int i = 0; i < N; i++){
                 check* ch1 = getC(whiteSide,i);
@@ -114,7 +114,7 @@ class GAME{
                 render();
                 motion(p&1);
                 txSleep(100);
-                render();
+                
                 // спим
                 p++;
             }
