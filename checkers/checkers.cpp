@@ -35,13 +35,13 @@ class GAME{
         class rules{
             // __NOT_DEFINED__ //
         };
-        inline bool is_valid(int x, int y){
+        inline bool is_valid(int x, int y){//!DONE
             if(x<0 || x >=N || y<0 || y>=N) return false;
             if(board[x][y]!=0) return false;
             return true;
         }
-        inline check * getC(int x, int y){return b1[x][y];}
-        inline kinger * getK(int x, int y) {return b2[x][y];}
+        inline check * getC(int x, int y){return b1[x][y];} //!DONE
+        inline kinger * getK(int x, int y) {return b2[x][y];} // !DONE
         inline void render(){
             for(int i = 0; i < N; i++){
                 for(int j = 0; j < N; j++){
@@ -68,8 +68,9 @@ class GAME{
                 }
             }
         }
-        void beat(int x, int y, int beatx, int beaty, int x_after_beat, int y_after_beat){
-            if(!valid(x_after_beat,y_after_beat)) return;
+        //? POSSIBLY DONE
+        bool beat(int x, int y, int beatx, int beaty, int x_after_beat, int y_after_beat){
+            if(!is_valid(x_after_beat,y_after_beat)) return false;
             if(board[x][y]==1){
                 move(x,y,x_after_beat,y_after_beat);
             } else {
@@ -77,33 +78,48 @@ class GAME{
             }
             if(board[beatx][beaty]==1) b1[beatx][beaty]= nullptr;
             else b2[beatx][beaty] = nullptr;
+            board[beatx][beaty] = 0;
+            return true;
         }
-        pair<int,int> can_Beat(int x, int y){
+        pair<int,int> can_Beat(int x, int y){//TODO: must be done
 
         }
-        inline void move(int x, int y, int tox, int toy, bool ch_flag = 1){// перемещенеие шашки на место
-            if(!valid(tox,toy)) return;
+        //!DONE
+        inline bool move(int x, int y, int tox, int toy, bool ch_flag = 1){// перемещенеие шашки на место
+            if(!is_valid(tox,toy)) return false;
             if(ch_flag){
+                board[tox][toy] = 1; 
                 swap(b1[x][y],b1[tox][toy]);
             } else {
+                board[tox][toy] = 2;
                 swap(b2[x][y],b2[tox][toy]);
             }
+            board[x][y] = 0; 
+            return true;
         }
+        // ? POSSIBLY DONE
         inline void to_kingers(){ // проверка что кто то внезапно преваритлся в дамку
             int whiteSide = 0, blackSide = N-1;
             for(int i = 0; i < N; i++){
-                check* ch1 = getC(whiteSide,i);
-                check* ch2 = getC(blackSide,i);
-                if(ch1->color==0){
-                    kinger * appear = new kinger;
-                    b1[whiteSide][i] = nullptr;
-                    b2[whiteSide][i] = appear;
+                if(board[whiteSide][i]==1){
+                    check* ch1 = getC(whiteSide,i);
+                    if(ch1->color==0){
+                        kinger * appear = new kinger;
+                        b1[whiteSide][i] = nullptr;
+                        b2[whiteSide][i] = appear;
+                    }
+                    board[whiteSide][i] = 2;
                 }
-                if(ch2->color==1){
-                     kinger * appear = new kinger;
-                    b1[blackSide][i] = nullptr;
-                    b2[blackSide][i] = appear;
+                if(board[blackSide][i]==1){
+                    check* ch2 = getC(blackSide,i);
+                    if(ch2->color==1){
+                        kinger * appear = new kinger;
+                        b1[blackSide][i] = nullptr;
+                        b2[blackSide][i] = appear;
+                    }
+                    board[blackSide][i]==2;
                 }
+                
             }
         }
         void motion(int player){
@@ -136,7 +152,7 @@ class GAME{
             }
             txSleep(10000000);
         }
-        void prepare(){
+        void prepare(){//!DONE
             for(int i = 0; i < N; i++){
                 for(int j = 0; j < N; j++){
                     if(i<3 || i>=N-3) {
