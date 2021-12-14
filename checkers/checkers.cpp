@@ -53,19 +53,44 @@ class GAME{
                     txRectangle(100*j,100*i,100*(j+1),100*(i+1));
                     if (board[i][j]==1) {// шашка
                         check* now = getC(i,j);
-                        // txSetFillColor(TX_GREEN);
-                        // txRectangle(100*j+20,100*i+20,100*(j+1)-20,100*(i+1)-20);
+                        if(now->color) txSetFillColor(TX_RED);
+                        else  txSetFillColor(TX_GREEN);
+                        txRectangle(100*j+20,100*i+20,100*(j+1)-20,100*(i+1)-20);
                     }
                     else  if(board[i][j]==2){ // дамка
                         kinger* now = getK(i,j);
-                        // txSetFillColor(TX_RED);
-                        // txRectangle(100*j+20,100*i+20,100*(j+1)-20,100*(i+1)-20);
+                        if(now->color) txSetFillColor(TX_RED);
+                        else  txSetFillColor(TX_GREEN);
+                        txRectangle(100*j+20,100*i+20,100*(j+1)-20,100*(i+1)-20);
                     }
                     
                 }
             }
         }
-        void move(int x, int y, int tox, int toy, bool ch_flag = 1);
+        void move(int x, int y, int tox, int toy, bool ch_flag = 1){
+            if(ch_flag){
+                swap(b1[x][y],b1[tox][toy]);
+            } else {
+                swap(b2[x][y],b2[tox][toy]);
+            }
+        }
+        void to_kingers(){
+            int whiteSide = 0, blackSide = N-1;
+            for(int i = 0; i < N; i++){
+                check* ch1 = getC(whiteSide,i);
+                check* ch2 = getC(blackSide,i);
+                if(ch1->color==0){
+                    kinger * appear = new kinger;
+                    b1[whiteSide][i] = nullptr;
+                    b2[whiteSide][i] = appear;
+                }
+                if(ch2->color==1){
+                     kinger * appear = new kinger;
+                    b1[blackSide][i] = nullptr;
+                    b2[blackSide][i] = appear;
+                }
+            }
+        }
         void motion(int player){
             // тут мы получаем координаты мышки 
             // если цвет мышки совпадает с 
@@ -76,6 +101,8 @@ class GAME{
             else  if(board[i][j]==2){ // дамка
                 kinger* now = getK(i,j);
             }
+            int tox = 0, toy = 0; // считываем куда он хочет пойти
+
         }
         
         
@@ -86,6 +113,7 @@ class GAME{
             while (true){
                 render();
                 motion(p&1);
+                txSleep(100);
                 render();
                 // спим
                 p++;
@@ -108,7 +136,7 @@ class GAME{
                             tmp->x = i, tmp->y = j;
                             b1[i][j] = tmp;
                         }
-                    } else board[i][j] = 0;
+                    } else {board[i][j] = 0; b1[i][j] = nullptr;}
                 }
             }
 
