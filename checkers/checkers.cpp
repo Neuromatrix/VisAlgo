@@ -37,6 +37,7 @@ class GAME{
         };
         inline bool is_valid(int x, int y){
             if(x<0 || x >=N || y<0 || y>=N) return false;
+            if(board[x][y]!=0) return false;
             return true;
         }
         inline check * getC(int x, int y){return b1[x][y];}
@@ -67,14 +68,28 @@ class GAME{
                 }
             }
         }
-        inline void move(int x, int y, int tox, int toy, bool ch_flag = 1){
+        void beat(int x, int y, int beatx, int beaty, int x_after_beat, int y_after_beat){
+            if(!valid(x_after_beat,y_after_beat)) return;
+            if(board[x][y]==1){
+                move(x,y,x_after_beat,y_after_beat);
+            } else {
+                move(x,y,x_after_beat,y_after_beat,2);
+            }
+            if(board[beatx][beaty]==1) b1[beatx][beaty]= nullptr;
+            else b2[beatx][beaty] = nullptr;
+        }
+        pair<int,int> can_Beat(int x, int y){
+
+        }
+        inline void move(int x, int y, int tox, int toy, bool ch_flag = 1){// перемещенеие шашки на место
+            if(!valid(tox,toy)) return;
             if(ch_flag){
                 swap(b1[x][y],b1[tox][toy]);
             } else {
                 swap(b2[x][y],b2[tox][toy]);
             }
         }
-        inline void to_kingers(){
+        inline void to_kingers(){ // проверка что кто то внезапно преваритлся в дамку
             int whiteSide = 0, blackSide = N-1;
             for(int i = 0; i < N; i++){
                 check* ch1 = getC(whiteSide,i);
@@ -101,6 +116,7 @@ class GAME{
             else  if(board[i][j]==2){ // дамка
                 kinger* now = getK(i,j);
             }
+            // показываем тут кружочки
             int tox = 0, toy = 0; // считываем куда он хочет пойти
 
         }
