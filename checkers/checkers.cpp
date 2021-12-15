@@ -92,7 +92,7 @@ private:
         if (board[y][x] == 1) {
             move(x, y, x_after_beat, y_after_beat);
         }
-        else if(board[y][x] == 2) {
+        else {
             move(x, y, x_after_beat, y_after_beat, 2);
         }
         if (board[beaty][beatx] == 1) b1[beaty][beatx] = nullptr;
@@ -102,20 +102,16 @@ private:
     }
     bool can_Beat(int x, int y, int p_color, int killer_x, int killer_y) {//TODO: must be done
         if (x < 0 || x >= N || y < 0 || y >= N) return false;
-        if (board[y][x] == 0 || board[killer_y][killer_x]==0) return false;
+        if (board[y][x] == 0) return false;
         check * maybeBeat =  getC(x,y);
         if (board[y][x] == 2) kinger * maybeBeat = getK(x,y);
-        if(maybeBeat->color!=p_color) return false;
-        if(board[killer_y][killer_x]==1) {
-            for(int i = 2; i < 3; i++)
-                if(is_valid(i*(x-killer_x),i*(y-killer_y))) return true;
-            return false;
-        } else if (board[killer_y][killer_x] == 2){
-            for(int i = 2; i < N+2; i++)
-                if(is_valid(i*(x-killer_x),i*(y-killer_y))) return true;
-            return false;
-        }
-        
+        // if(maybeBeat->color!=p_color) return false;
+        // check * rt =  getC(killer_x,killer_y);
+        // if (board[killer_y][killer_x] == 2) kinger * rt = getK(killer_x,killer_y);
+        // if(rt==nullptr) return false;
+        for(int i = 2; i < 3; i++)
+            if(is_valid(i*(x-killer_x),i*(y-killer_y))) return true;
+        else return false;
     }
     //!DONE
     
@@ -134,7 +130,7 @@ private:
                 }
                 
             }
-            if (board[blackSide][i] == 1) {
+            if (board[blackSide][i] == 1) { 
                 check* ch2 = getC( i,blackSide);
                 if (ch2->color == 0) {
                     kinger* appear = new kinger;
@@ -213,7 +209,6 @@ private:
         
         txSleep(500);
         int tox = ex / 100, toy = ey / 100; // считываем куда он хочет пойти
-        if((tox+toy)&1==0) goto tryAgain;
         if (!is_valid(tox, toy)) {
             render();
             goto tryAgain;
@@ -235,7 +230,20 @@ private:
             
         }
         to_kingers();
-        
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++){
+                cout << (b1[i][j]==nullptr) << " ";
+            }
+            cout << nl;
+        }
+        cout << endl;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++){
+                cout << (b2[i][j]==nullptr) << " ";
+            }
+            cout << nl;
+        }
+        cout << endl;
     }
 
 
@@ -277,7 +285,6 @@ private:
                 else { board[i][j] = 0; b1[i][j] = nullptr; b2[i][j]==nullptr;}
                 b2[i][j]=nullptr;
             }
-           
         }
 
     }
