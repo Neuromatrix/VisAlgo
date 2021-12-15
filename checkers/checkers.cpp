@@ -105,10 +105,10 @@ private:
         if (board[y][x] == 0) return false;
         check * maybeBeat =  getC(x,y);
         if (board[y][x] == 2) kinger * maybeBeat = getK(x,y);
-        // if(maybeBeat->color!=p_color) return false;
-        // check * rt =  getC(killer_x,killer_y);
-        // if (board[killer_y][killer_x] == 2) kinger * rt = getK(killer_x,killer_y);
-        // if(rt==nullptr) return false;
+        if(maybeBeat->color!=p_color) return false;
+        check * rt =  getC(killer_x,killer_y);
+        if (board[killer_y][killer_x] == 2) kinger * rt = getK(killer_x,killer_y);
+        if(rt==nullptr) return false;
         for(int i = 2; i < 3; i++)
             if(is_valid(i*(x-killer_x),i*(y-killer_y))) return true;
         else return false;
